@@ -1,0 +1,113 @@
+PATHFINDER AI AGENCY — SITIO WEB CORPORATIVO
+============================================
+
+Sitio estático (HTML + CSS + JavaScript). No requiere WordPress, base de
+datos, PHP ni librerías externas. No hace ninguna petición a CDN: la
+tipografía de marca va autohospedada.
+
+
+ESTRUCTURA DEL PAQUETE
+----------------------
+index.html                          Página principal (una sola página).
+robots.txt                          Indicaciones para buscadores.
+sitemap.xml                         Mapa del sitio.
+assets/css/styles.css               Diseño completo y adaptación móvil.
+assets/js/main.js                   Menú, idioma ES/EN y animaciones.
+assets/fonts/Manrope-*.ttf          Tipografía de marca (Manrope variable).
+assets/fonts/Manrope-OFL.txt        Licencia SIL Open Font de Manrope.
+assets/img/pathfinder-logo.svg      Logotipo oficial (negro, sobre claro).
+assets/img/pathfinder-logo-light.svg  Logotipo en blanco (usado en el sitio).
+assets/img/pathfinder-logo-agency.svg Variante "Agency Inc." de reserva.
+assets/img/pathfinder-icon.svg      Isotipo (negro).
+assets/img/pathfinder-icon-light.svg  Isotipo (blanco).
+assets/img/favicon.svg              Favicon (isotipo sobre Cosmos Blue).
+assets/img/pathfinder-social.svg    Imagen para redes (Open Graph, 1200x630).
+assets/img/*.png                    Versiones PNG del logo e isotipo.
+
+
+CÓMO PUBLICAR EN HOSTINGER
+--------------------------
+1. Entra a Hostinger > Websites > Administrar > Files > File Manager.
+2. Abre la carpeta public_html.
+3. IMPORTANTE: conserva las carpetas Demos/Demo_Esp y Demos/Demo_Eng.
+   Los botones de demo del sitio apuntan a ellas con rutas relativas.
+4. Si ya existe un index.html o index.php anterior, renómbralo como
+   respaldo (por ejemplo index_anterior.html) antes de subir el nuevo.
+5. Sube el contenido de esta carpeta (index.html, robots.txt, sitemap.xml
+   y la carpeta assets) directamente dentro de public_html, NO dentro de
+   una subcarpeta.
+6. Debe quedar así:
+      public_html/index.html
+      public_html/robots.txt
+      public_html/sitemap.xml
+      public_html/assets/...
+      public_html/Demos/Demo_Esp/nextcare_landing_es.html
+      public_html/Demos/Demo_Eng/nextcare_landing.html
+7. Abre https://pathfinderaiagency.com en modo incógnito y verifica.
+
+
+ENLACES YA CONFIGURADOS
+-----------------------
+Demo ES        Demos/Demo_Esp/nextcare_landing_es.html   (ruta relativa)
+Demo EN        Demos/Demo_Eng/nextcare_landing.html      (ruta relativa)
+Agenda         https://cal.com/pathfinderai/free-consultation?user=pathfinderai
+Presentación   Gamma — "AI in Action"
+Correo         info@pathfinderaiagency.com
+
+
+IDENTIDAD DE MARCA APLICADA
+---------------------------
+Tomada de la guía oficial (Pathfinder deliverables — brand guidelines,
+agosto 2026).
+
+Colores
+  Cosmos Blue     #051633   Fondo oscuro principal (hero, secciones).
+  Mystic Cosmos   #3E3085   Color secundario, antetítulos, degradados.
+  Heavy Blue      #76A1FF   Acento: botones, enlaces, destacados.
+  Riders Black    #121212   Franja de valor y pie de página.
+  White           #FFFFFF   Fondo claro y texto sobre oscuro.
+
+Tipografía
+  Manrope, autohospedada como fuente variable (pesos 200 a 800).
+  Respaldo del sistema: Segoe UI, Arial, Helvetica.
+  Titulares en peso Regular/Medium con interletrado ajustado, siguiendo
+  la escala tipográfica de la guía (H1 56/64, H2 40/48, H3 36/42,
+  H4 28/36, subtítulo 24/32).
+
+Logotipo
+  Se usan los archivos vectoriales originales de la entrega de marca.
+  En el sitio se muestra la versión en blanco sobre fondo oscuro; la
+  versión negra queda incluida para materiales sobre fondo claro.
+  Nota: el logotipo usa la tipografía Posterama, que ya viene convertida
+  a curvas dentro del SVG, por lo que no necesita instalarse.
+
+
+CÓMO EDITAR EL CONTENIDO
+------------------------
+Todos los textos son bilingües y viven en dos sitios:
+
+  - index.html      El texto visible en español (versión por defecto).
+  - assets/js/main.js  El objeto "translations" con las versiones es y en.
+
+Cada elemento traducible lleva un atributo data-i18n="clave". Para cambiar
+un texto, edítalo en index.html y en las dos entradas correspondientes del
+diccionario de main.js, usando la misma clave. Si una clave falta en el
+diccionario, el sitio conserva el texto del HTML.
+
+El idioma inicial se toma de: preferencia guardada del visitante >
+idioma del navegador > español. La elección se guarda en localStorage.
+
+
+NOTAS TÉCNICAS
+--------------
+- Accesibilidad: enlace de salto al contenido, foco visible, etiquetas
+  ARIA en navegación y menú, y respeto por prefers-reduced-motion.
+- SEO: metadatos Open Graph y Twitter Card, enlace canónico, datos
+  estructurados JSON-LD (ProfessionalService), robots.txt y sitemap.xml.
+- Rendimiento: sin dependencias externas, sin peticiones a CDN, fuente
+  precargada, animaciones con IntersectionObserver.
+- Compatibilidad: navegadores modernos de escritorio y móvil. Puntos de
+  quiebre en 1080 px, 900 px y 620 px.
+
+Antes de publicar, actualiza la fecha <lastmod> de sitemap.xml si el
+contenido cambia de forma relevante.

@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#051633">
+  <meta name="description" content="Interactive demo of Mary, the AI voice receptionist by Pathfinder AI Agency: she answers the call, checks the calendar and confirms the appointment.">
+  <meta property="og:title" content="Mary, AI voice receptionist | Pathfinder AI Agency demo">
+  <meta property="og:description" content="Interactive demo of Mary, the AI voice receptionist by Pathfinder AI Agency: she answers the call, checks the calendar and confirms the appointment.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://pathfinderaiagency.com/assets/img/pathfinder-social.svg">
+  <meta name="twitter:card" content="summary_large_image">
+  <title>Mary — AI Receptionist | Pathfinder AI Demo</title>
+  <link rel="icon" href="../../assets/img/favicon.svg" type="image/svg+xml">
+  <style>
+    /* Tipografia de marca autohospedada, sin peticiones a CDN */
+    @font-face {
+      font-family: 'Manrope';
+      src: url('../../assets/fonts/Manrope-VariableFont_wght.ttf') format('truetype-variations');
+      font-weight: 200 800;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal: #76A1FF;
+      --teal-dark: #5B7FE8;
+      --dark: #051633;
+      --phone-bg: #0A2050;
+      --phone-border: #14315E;
+      --text-muted: #8FA3C4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Manrope', 'Segoe UI', Arial, Helvetica, sans-serif;
+      background-color: var(--dark);
+      color: #fff;
+      min-height: 100vh;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+
+    /* ── BACKGROUND ────────────────────────────────────── */
+    .bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      background: url('bg_therapy_room.png') center 30% / cover no-repeat;
+    }
+    .bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to right,
+          rgba(5, 22, 51, 0.70) 0%,
+          rgba(5, 22, 51, 0.45) 45%,
+          rgba(5, 22, 51, 0.25) 100%
+        );
+    }
+
+    .hero-wrapper {
+      position: relative;
+      overflow: clip;
+    }
+
+    .hero-wrapper > .scroll-cue {
+      position: sticky;
+      bottom: 32px;
+      z-index: 10;
+      padding-top: 0;
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+      padding: 0 8vw;
+      gap: 4vw;
+    }
+
+    /* ── LEFT COPY ──────────────────────────────────────── */
+    .copy {
+      flex: 1;
+      max-width: 520px;
+      position: relative;
+    }
+
+    /* ── VOICE WAVE (L→R traveling) ────────────────────── */
+    .voice-wave {
+      position: absolute;
+      top: 0px;
+      left: -60px;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      height: 46px;
+      pointer-events: none;
+      z-index: -1;
+      opacity: 0.17;
+    }
+
+    .vw-bar {
+      width: 2.5px;
+      border-radius: 2px;
+      background: var(--teal);
+      flex-shrink: 0;
+      transform-origin: center;
+      animation: vwWave 2.4s ease-in-out infinite;
+    }
+
+    @keyframes vwWave {
+      0%, 100% { transform: scaleY(0.12); }
+      50%       { transform: scaleY(1); }
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.4rem;
+      border: 1px solid rgba(118,161,255, 0.3);
+      padding: 0.35rem 0.85rem;
+      border-radius: 99px;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.4rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--teal);
+    }
+
+    .subtext {
+      font-size: clamp(0.95rem, 1.3vw, 1.1rem);
+      font-weight: 400;
+      line-height: 1.7;
+      color: #A9BBD8;
+      max-width: 400px;
+      margin-bottom: 2.4rem;
+    }
+
+    .try-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #76A1FF;
+      border: 1.5px solid #76A1FF;
+      color: #051633;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      padding: 0.85rem 1.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 10px 28px rgba(118,161,255,0.32);
+    }
+
+    .try-btn:hover {
+      background: #92B4FF;
+      border-color: #92B4FF;
+      color: #051633;
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(118,161,255,0.42);
+    }
+
+    .try-btn.playing {
+      background: rgba(118,161,255,0.14);
+      border-color: rgba(118,161,255,0.55);
+      color: #76A1FF;
+      box-shadow: none;
+    }
+
+    .play-icon {
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── DEMO PAIR: phone + calendar ────────────────────── */
+    .demo-pair {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      flex: 0 0 auto;
+      overflow: visible;
+    }
+
+    /* ── CALENDAR WIDGET ────────────────────────────────── */
+    .calendar-widget {
+      background: #071C40;
+      border: 1.5px solid #14315E;
+      border-radius: 20px;
+      padding: 14px 12px;
+      width: 160px;
+      flex-shrink: 0;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.03),
+        0 24px 60px rgba(0,0,0,0.7),
+        0 0 40px rgba(118,161,255,0.03);
+      margin-top: 44px;
+    }
+
+    .cal-header {
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .cal-practice {
+      font-size: 0.58rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .cal-day {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    .cal-date-sub {
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .cal-slots {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .cal-slot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 6px;
+      border-radius: 7px;
+      border: 1px solid transparent;
+      transition: background 0.4s ease, border-color 0.4s ease;
+    }
+
+    .slot-time {
+      font-size: 0.59rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.25);
+      min-width: 30px;
+      flex-shrink: 0;
+      letter-spacing: 0.02em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .slot-bar {
+      flex: 1;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.05);
+      transition: background 0.4s ease;
+    }
+
+    /* Taken (11:00) */
+    .cal-slot.taken {
+      background: rgba(129,140,248,0.06);
+    }
+    .cal-slot.taken .slot-time {
+      color: #76A1FF;
+    }
+    .cal-slot.taken .slot-bar {
+      background: rgba(129,140,248,0.4);
+    }
+    .slot-taken-label {
+      font-size: 0.56rem;
+      font-weight: 500;
+      color: #76A1FF;
+      white-space: nowrap;
+    }
+
+    /* Bookable (10:00 open) */
+    .cal-slot.bookable .slot-time {
+      color: var(--teal);
+    }
+    .cal-slot.bookable .slot-bar {
+      background: rgba(118,161,255,0.18);
+    }
+
+    /* Label swap: Open ↔ Sarah J. */
+    .slot-open-label {
+      font-size: 0.56rem;
+      font-weight: 500;
+      color: rgba(118,161,255,0.75);
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 28px;
+      opacity: 1;
+      transition: max-width 0.35s ease, opacity 0.25s ease;
+    }
+    .slot-booked-name {
+      font-size: 0.56rem;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      max-width: 0;
+      opacity: 0;
+      transition: max-width 0.35s ease 0.1s, opacity 0.3s ease 0.1s;
+    }
+
+    /* Booked state (applied by JS) */
+    .cal-slot.booked {
+      background: rgba(118,161,255,0.09) !important;
+      border-color: rgba(118,161,255,0.22) !important;
+    }
+    .cal-slot.booked .slot-bar {
+      background: var(--teal) !important;
+    }
+    .cal-slot.booked .slot-open-label {
+      max-width: 0;
+      opacity: 0;
+    }
+    .cal-slot.booked .slot-booked-name {
+      max-width: 48px;
+      opacity: 1;
+    }
+
+    @keyframes bookingFlash {
+      0%   { box-shadow: 0 0 0 0 rgba(118,161,255,0.55); }
+      70%  { box-shadow: 0 0 0 8px rgba(118,161,255,0); }
+      100% { box-shadow: 0 0 0 0 rgba(118,161,255,0); }
+    }
+    .cal-slot.booking-flash {
+      animation: bookingFlash 0.65s ease-out;
+    }
+
+    /* ── PHONE MOCKUP ───────────────────────────────────── */
+    .phone-wrap {
+      flex: 0 0 auto;
+      position: relative;
+      width: clamp(200px, 18vw, 240px);
+    }
+
+    .phone {
+      background: #071C40;
+      border: 1.5px solid #14315E;
+      border-radius: 46px;
+      aspect-ratio: 9 / 19.5;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 14px 24px;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.04),
+        0 40px 80px rgba(0,0,0,0.8),
+        0 0 50px rgba(118,161,255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: '';
+      flex-shrink: 0;
+      display: block;
+      width: 80px;
+      height: 24px;
+      background: #000;
+      border-radius: 20px;
+      margin: 0 auto 8px;
+    }
+
+    .status-bar {
+      display: flex;
+      flex-shrink: 0;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 6px;
+      margin-bottom: 10px;
+      font-size: 0.62rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .status-icons {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .call-label {
+      flex-shrink: 0;
+      text-align: center;
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .phone-spacer { flex: 1; }
+
+    .avatar {
+      width: 68px;
+      height: 68px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--teal-dark), #3E3085);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+    }
+
+    .avatar svg { opacity: 0.9; }
+
+    .caller-name {
+      flex-shrink: 0;
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 3px;
+    }
+
+    .caller-number {
+      flex-shrink: 0;
+      text-align: center;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .ai-badge {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(118,161,255, 0.12);
+      border: 1px solid rgba(118,161,255, 0.3);
+      border-radius: 99px;
+      padding: 4px 12px;
+      width: fit-content;
+      margin: 0 auto 14px;
+      font-size: 0.65rem;
+      font-weight: 500;
+      color: var(--teal);
+    }
+
+    .ai-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse-dot 1.4s infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── WAVEFORM ───────────────────────────────────────── */
+    .waveform {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      height: 30px;
+      margin-bottom: 16px;
+    }
+
+    .wave-bar {
+      width: 3px;
+      border-radius: 3px;
+      background: var(--teal);
+      opacity: 0.5;
+      transition: opacity 0.3s;
+    }
+
+    .wave-bar:nth-child(1)  { height: 8px;  animation: wave 1.2s ease-in-out infinite 0.0s; }
+    .wave-bar:nth-child(2)  { height: 14px; animation: wave 1.2s ease-in-out infinite 0.1s; }
+    .wave-bar:nth-child(3)  { height: 22px; animation: wave 1.2s ease-in-out infinite 0.2s; }
+    .wave-bar:nth-child(4)  { height: 30px; animation: wave 1.2s ease-in-out infinite 0.15s; }
+    .wave-bar:nth-child(5)  { height: 36px; animation: wave 1.2s ease-in-out infinite 0.05s; }
+    .wave-bar:nth-child(6)  { height: 28px; animation: wave 1.2s ease-in-out infinite 0.25s; }
+    .wave-bar:nth-child(7)  { height: 36px; animation: wave 1.2s ease-in-out infinite 0.1s; }
+    .wave-bar:nth-child(8)  { height: 24px; animation: wave 1.2s ease-in-out infinite 0.2s; }
+    .wave-bar:nth-child(9)  { height: 16px; animation: wave 1.2s ease-in-out infinite 0.05s; }
+    .wave-bar:nth-child(10) { height: 10px; animation: wave 1.2s ease-in-out infinite 0.15s; }
+    .wave-bar:nth-child(11) { height: 6px;  animation: wave 1.2s ease-in-out infinite 0.3s; }
+
+    @keyframes wave {
+      0%, 100% { transform: scaleY(0.35); opacity: 0.4; }
+      50%       { transform: scaleY(1);    opacity: 0.9; }
+    }
+
+    .waveform.paused .wave-bar {
+      animation-play-state: paused;
+      transform: scaleY(0.35);
+      opacity: 0.3;
+    }
+
+    /* ── CALL BUTTONS ───────────────────────────────────── */
+    .call-btns {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .cbtn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .cbtn.end {
+      width: 52px;
+      height: 52px;
+      background: #e53e3e;
+    }
+
+    .cbtn svg { width: 18px; height: 18px; }
+
+    /* ── NOTIFICATION BADGE ─────────────────────────────── */
+    .notif {
+      position: absolute;
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(18, 24, 36, 0.92);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 8px 12px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .notif.visible { opacity: 1; }
+
+    .notif-handled {
+      right: -80px;
+      bottom: 90px;
+      transform: translateX(10px);
+      min-width: 148px;
+    }
+    .notif-handled.visible { transform: translateX(0); }
+
+    .notif-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--teal-dark), #3E3085);
+      flex-shrink: 0;
+    }
+
+    .notif-icon.green { background: linear-gradient(135deg, #4FC79B, #1E7A5C); }
+
+    .notif-text strong {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .notif-text span {
+      font-size: 0.66rem;
+      color: var(--text-muted);
+    }
+
+    /* ── FOOTER TAG ─────────────────────────────────────── */
+    .powered {
+      position: fixed;
+      bottom: 24px;
+      right: 32px;
+      z-index: 2;
+      font-size: 0.72rem;
+      color: rgba(255,255,255,0.3);
+      letter-spacing: 0.05em;
+    }
+
+    .powered span { color: var(--teal); }
+
+    /* ── PROBLEM SECTION ────────────────────────────────── */
+    .problem-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #030E22;
+      padding: 60px 6vw 0;
+    }
+
+    .problem-panels {
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6);
+      display: flex;
+    }
+
+    .panel {
+      flex: 1;
+      position: relative;
+      aspect-ratio: 1 / 2;
+      background-image: url('problem_panels.png');
+      background-size: 300% auto;
+      background-repeat: no-repeat;
+    }
+
+    .panel:nth-child(1) { background-position: 0% 30%; }
+    .panel:nth-child(2) { background-position: 50% 30%; }
+    .panel:nth-child(3) { background-position: 100% 30%; }
+
+    .panel::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(5,6,10,0.78) 0%,
+        rgba(5,6,10,0.78) 30%,
+        rgba(5,6,10,0.15) 65%,
+        rgba(5,6,10,0.30) 100%
+      );
+    }
+
+    .panel + .panel { border-left: 1px solid rgba(255,255,255,0.06); }
+
+    .panel-content {
+      position: absolute;
+      inset: 0;
+      padding: 28px 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-num {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.96);
+      color: #051633;
+      font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
+      font-size: 0.82rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+
+    .panel-text {
+      font-family: 'Manrope', 'Segoe UI', Arial, sans-serif;
+      font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+      font-weight: 600;
+      line-height: 1.45;
+      color: #FFFFFF;
+      letter-spacing: -0.01em;
+    }
+
+    .panel-text .accent { color: #76A1FF; }
+
+    .scroll-cue {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 36px 0 48px;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s;
+      text-decoration: none;
+    }
+
+    .scroll-cue:hover { color: var(--teal); }
+
+    .scroll-arrow {
+      width: 32px;
+      height: 32px;
+      border: 1.5px solid currentColor;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: bob 2s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(5px); }
+    }
+
+    /* ── CTA SECTION ────────────────────────────────────── */
+    .cta-section {
+      background: #030E22;
+      padding: 90px 8vw;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .cta-inner { max-width: 560px; }
+
+    .cta-eyebrow {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 1.2rem;
+    }
+
+    .cta-inner h2 {
+      font-size: clamp(1.9rem, 3.5vw, 2.8rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .cta-subtext {
+      font-size: 1rem;
+      color: #8FA3C4;
+      line-height: 1.65;
+      margin-bottom: 2.4rem;
+    }
+
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--teal);
+      color: #051633;
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: inherit;
+      padding: 0.95rem 2.3rem;
+      border-radius: 999px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      letter-spacing: -0.01em;
+    }
+
+    .cta-btn:hover {
+      background: #92B4FF;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 34px rgba(118,161,255,0.38);
+    }
+
+    /* ── RESPONSIVE ─────────────────────────────────────── */
+    @media (max-width: 960px) {
+      .hero {
+        flex-direction: column;
+        justify-content: center;
+        padding: 60px 6vw 40px;
+        gap: 40px;
+        overflow: auto;
+        min-height: 100dvh;
+      }
+      .copy { max-width: 100%; }
+      .hero { padding-top: 96px; }
+      .problem-section { padding-top: 96px; }
+      body { overflow: auto; }
+      .demo-pair { justify-content: center; }
+      .notif-handled { right: -30px; }
+    }
+
+    @media (max-width: 560px) {
+      .calendar-widget { display: none; }
+    }
+    /* Los tres paneles del problema se apilan en pantallas estrechas:
+       en fila quedaban tan angostos que el texto se cortaba. */
+    @media (max-width: 760px) {
+      .problem-section { padding-bottom: 40px; }
+      .problem-panels {
+        flex-direction: column;
+        max-width: 460px;
+        gap: 2px;
+        border-radius: 16px;
+      }
+      .panel { aspect-ratio: 16 / 9; }
+      .panel:nth-child(1) { background-position: 0% 26%; }
+      .panel:nth-child(2) { background-position: 50% 26%; }
+      .panel:nth-child(3) { background-position: 100% 26%; }
+      .panel-content { padding: 20px 20px; }
+      .panel-text { font-size: 1rem; line-height: 1.4; }
+      .panel-num { width: 26px; height: 26px; font-size: 0.8rem; }
+      /* El sello fijo se solapaba con el telefono en pantallas cortas;
+         la barra superior ya lleva la marca. */
+      .powered { display: none; }
+    }
+
+    /* ── MARCA PATHFINDER ───────────────────────────────── */
+    .pf-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 60;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px clamp(16px, 4vw, 34px);
+      background: linear-gradient(180deg, rgba(5,22,51,.82), rgba(5,22,51,0));
+      pointer-events: none;
+    }
+    .pf-bar > * { pointer-events: auto; }
+    .pf-home { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .pf-home img { width: 150px; height: auto; display: block; }
+    .pf-tag {
+      padding: 5px 12px;
+      border: 1px solid rgba(118,161,255,.38);
+      border-radius: 999px;
+      background: rgba(118,161,255,.13);
+      color: #76A1FF;
+      font-size: 0.64rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .pf-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color .25s ease, border-color .25s ease;
+    }
+    .pf-back:hover { background: rgba(255,255,255,.13); border-color: rgba(255,255,255,.4); }
+    .pf-back svg { width: 14px; height: 14px; }
+
+    .powered a {
+      color: #76A1FF;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color .2s ease;
+    }
+    .powered a:hover { color: #92B4FF; }
+
+    @media (max-width: 620px) {
+      .pf-home img { width: 122px; }
+      .pf-tag { display: none; }
+      .pf-back { padding: 8px 14px; font-size: 0.76rem; }
+      .powered img { width: 112px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra de marca Pathfinder -->
+  <div class="pf-bar">
+    <a class="pf-home" href="https://pathfinderaiagency.com/" aria-label="Pathfinder AI Agency">
+      <img src="../../assets/img/pathfinder-logo-light.svg" width="150" height="26" alt="Pathfinder AI Agency">
+    </a>
+    <span class="pf-tag">Interactive demo</span>
+    <a class="pf-back" href="https://pathfinderaiagency.com/">
+      <span>Go to site</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+  <!-- SECTION 1 — THE PROBLEM -->
+  <section class="problem-section">
+    <div class="problem-panels">
+
+      <div class="panel">
+        <div class="panel-content">
+          <div class="panel-num">1</div>
+          <p class="panel-text">
+            <span class="accent">Right now,</span> somewhere in
+            <span class="accent">your area,</span> a potential
+            new client is calling <span class="accent">your therapist's office.</span>
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-content">
+          <div class="panel-num">2</div>
+          <p class="panel-text">
+            <span class="accent">You are in session</span>
+            and cannot pick up.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-content">
+          <div class="panel-num">3</div>
+          <p class="panel-text">
+            The caller hangs up and <span class="accent">Googles</span> the next name on the list. You just <span class="accent">lost a client</span> who could have used your help.
+          </p>
+        </div>
+      </div>
+
+    </div>
+    <a class="scroll-cue" href="#solution">
+      <span>See the solution</span>
+      <div class="scroll-arrow">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+          <path d="M6 1v9M2 7l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </a>
+  </section>
+
+  <!-- SECTION 2 — THE SOLUTION -->
+  <div class="hero-wrapper">
+  <div class="bg"></div>
+
+  <section class="hero" id="solution">
+
+    <!-- LEFT: COPY -->
+    <div class="copy">
+      <!-- Ambient voice waveform — L→R traveling signal -->
+      <div class="voice-wave" aria-hidden="true">
+        <div class="vw-bar" style="height:7px"></div>
+        <div class="vw-bar" style="height:13px"></div>
+        <div class="vw-bar" style="height:20px"></div>
+        <div class="vw-bar" style="height:27px"></div>
+        <div class="vw-bar" style="height:32px"></div>
+        <div class="vw-bar" style="height:36px"></div>
+        <div class="vw-bar" style="height:38px"></div>
+        <div class="vw-bar" style="height:36px"></div>
+        <div class="vw-bar" style="height:32px"></div>
+        <div class="vw-bar" style="height:27px"></div>
+        <div class="vw-bar" style="height:20px"></div>
+        <div class="vw-bar" style="height:13px"></div>
+        <div class="vw-bar" style="height:7px"></div>
+        <div class="vw-bar" style="height:4px"></div>
+        <div class="vw-bar" style="height:7px"></div>
+        <div class="vw-bar" style="height:13px"></div>
+        <div class="vw-bar" style="height:20px"></div>
+        <div class="vw-bar" style="height:27px"></div>
+        <div class="vw-bar" style="height:32px"></div>
+        <div class="vw-bar" style="height:36px"></div>
+        <div class="vw-bar" style="height:38px"></div>
+        <div class="vw-bar" style="height:36px"></div>
+        <div class="vw-bar" style="height:32px"></div>
+        <div class="vw-bar" style="height:27px"></div>
+        <div class="vw-bar" style="height:20px"></div>
+        <div class="vw-bar" style="height:13px"></div>
+        <div class="vw-bar" style="height:7px"></div>
+        <div class="vw-bar" style="height:4px"></div>
+      </div>
+
+      <div class="eyebrow">AI Voice Receptionist</div>
+      <h1>Your calls,<br>answered<br><em>professionally and reliably</em></h1>
+      <p class="subtext">Answer every call. Book every appointment. 24/7. Let AI handle your front desk while you focus on what matters most.</p>
+
+      <button class="try-btn" id="try-btn" onclick="toggleAudio()">
+        <span class="play-icon" id="play-icon">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M4 3.5l9 4.5-9 4.5V3.5z"/>
+          </svg>
+        </span>
+        <span id="btn-label">Try it</span>
+      </button>
+    </div>
+
+    <!-- RIGHT: CALENDAR + PHONE -->
+    <div class="demo-pair">
+
+      <!-- CALENDAR WIDGET -->
+      <div class="calendar-widget">
+        <div class="cal-header">
+          <div class="cal-practice">NextCare Demo</div>
+          <div class="cal-day">Thursday</div>
+          <div class="cal-date-sub">Practitioner Schedule</div>
+        </div>
+        <div class="cal-slots">
+
+          <div class="cal-slot available">
+            <span class="slot-time">9:30</span>
+            <div class="slot-bar"></div>
+          </div>
+
+          <div class="cal-slot available">
+            <span class="slot-time">9:45</span>
+            <div class="slot-bar"></div>
+          </div>
+
+          <!-- 10:00 — open, animates to booked when Mary confirms -->
+          <div class="cal-slot bookable" id="slot-10am">
+            <span class="slot-time">10:00</span>
+            <div class="slot-bar"></div>
+            <span class="slot-open-label">Open</span>
+            <span class="slot-booked-name">Sarah J.</span>
+          </div>
+
+          <div class="cal-slot available">
+            <span class="slot-time">10:15</span>
+            <div class="slot-bar"></div>
+          </div>
+
+          <div class="cal-slot available">
+            <span class="slot-time">10:30</span>
+            <div class="slot-bar"></div>
+          </div>
+
+          <div class="cal-slot available">
+            <span class="slot-time">10:45</span>
+            <div class="slot-bar"></div>
+          </div>
+
+          <!-- 11:00 — already taken -->
+          <div class="cal-slot taken">
+            <span class="slot-time">11:00</span>
+            <div class="slot-bar"></div>
+            <span class="slot-taken-label">Taken</span>
+          </div>
+
+          <div class="cal-slot available">
+            <span class="slot-time">11:15</span>
+            <div class="slot-bar"></div>
+          </div>
+
+          <div class="cal-slot available">
+            <span class="slot-time">11:30</span>
+            <div class="slot-bar"></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- PHONE -->
+      <div class="phone-wrap">
+
+        <div class="phone">
+          <div class="status-bar">
+            <span>9:41</span>
+            <div class="status-icons">
+              <!-- wifi -->
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="white" opacity="0.85">
+                <path d="M7 7.5a1 1 0 110 2 1 1 0 010-2zm0-3a4 4 0 013.46 2l-1.2 1.2a2.5 2.5 0 00-4.52 0L3.54 6.5A4 4 0 017 4.5zm0-3a7 7 0 015.97 3.36L11.8 6a5.5 5.5 0 00-9.6 0L1.03 4.86A7 7 0 017 1.5z"/>
+              </svg>
+              <!-- battery -->
+              <svg width="22" height="10" viewBox="0 0 22 10" fill="white" opacity="0.85">
+                <rect x="0" y="1" width="18" height="8" rx="2" stroke="white" stroke-width="1.2" fill="none"/>
+                <rect x="18.5" y="3.5" width="2" height="3" rx="1" fill="white"/>
+                <rect x="1.5" y="2.5" width="14" height="5" rx="1" fill="white"/>
+              </svg>
+            </div>
+          </div>
+
+          <div class="call-label">Incoming Call</div>
+
+          <div class="phone-spacer"></div>
+
+          <div class="avatar">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="white">
+              <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v1h20v-1c0-3.3-6.7-5-10-5z"/>
+            </svg>
+          </div>
+
+          <div class="caller-name">Sarah Johnson</div>
+          <div class="caller-number">+1 647 555-0192</div>
+
+          <div class="ai-badge">
+            <div class="ai-dot"></div>
+            AI Answering
+          </div>
+
+          <div class="waveform paused" id="waveform">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+          </div>
+
+          <div class="phone-spacer"></div>
+
+          <div class="call-btns">
+            <!-- Mic -->
+            <div class="cbtn">
+              <svg viewBox="0 0 24 24" fill="white" opacity="0.7">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.91-3c-.49 0-.9.36-.98.85C16.52 14.2 14.47 16 12 16s-4.52-1.8-4.93-4.15c-.08-.49-.49-.85-.98-.85-.61 0-1.09.54-1 1.14.49 3 2.89 5.35 5.91 5.78V20c0 .55.45 1 1 1s1-.45 1-1v-2.08c3.02-.43 5.42-2.78 5.91-5.78.1-.6-.39-1.14-1-1.14z"/>
+              </svg>
+            </div>
+            <!-- End call -->
+            <div class="cbtn end">
+              <svg viewBox="0 0 24 24" fill="white" style="transform:rotate(135deg)">
+                <path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/>
+              </svg>
+            </div>
+            <!-- Speaker -->
+            <div class="cbtn">
+              <svg viewBox="0 0 24 24" fill="white" opacity="0.7">
+                <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification: Call Handled -->
+        <div class="notif notif-handled" id="notif-handled">
+          <div class="notif-icon green">
+            <svg viewBox="0 0 20 20" fill="white" width="15" height="15">
+              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+            </svg>
+          </div>
+          <div class="notif-text">
+            <strong>Call Handled</strong>
+            <span>in 54s</span>
+          </div>
+        </div>
+
+      </div><!-- /phone-wrap -->
+    </div><!-- /demo-pair -->
+  </section>
+
+  <div class="powered">Powered by <a href="https://pathfinderaiagency.com/">Pathfinder AI</a></div>
+
+  <a class="scroll-cue" href="#cta">
+    <span>Book a demo call</span>
+    <div class="scroll-arrow">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+        <path d="M6 1v9M2 7l4 4 4-4" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </a>
+  </div><!-- /hero-wrapper -->
+
+  <!-- SECTION 3 — CTA -->
+  <section class="cta-section" id="cta">
+    <div class="cta-inner">
+      <p class="cta-eyebrow">Want to see this working for your practice?</p>
+      <h2>Book a free 15-min consultation</h2>
+      <p class="cta-subtext">Let's connect and see how an AI receptionist would handle your calls — live, personalized to your practice and connected to your tools.</p>
+      <a href="https://cal.com/pathfinderai" class="cta-btn" target="_blank" rel="noopener">
+        Book a demo call &rarr;
+      </a>
+    </div>
+  </section>
+
+  <!-- Audio -->
+  <audio id="demo-audio" src="nextcare_demo_conversation.m4a" preload="auto"></audio>
+
+  <script>
+    const audio    = document.getElementById('demo-audio');
+    const btn      = document.getElementById('try-btn');
+    const label    = document.getElementById('btn-label');
+    const icon     = document.getElementById('play-icon');
+    const wave     = document.getElementById('waveform');
+    const nHandled = document.getElementById('notif-handled');
+    const slot10am = document.getElementById('slot-10am');
+
+    let handledTimer, calendarTimer;
+
+    function resetNotifs() {
+      nHandled.classList.remove('visible');
+    }
+
+    function resetCalendar() {
+      slot10am.classList.remove('booked', 'booking-flash');
+    }
+
+    function bookSlot() {
+      slot10am.classList.add('booked', 'booking-flash');
+      setTimeout(() => slot10am.classList.remove('booking-flash'), 700);
+    }
+
+    function setPlaying(state) {
+      if (state) {
+        btn.classList.add('playing');
+        label.textContent = 'Playing…';
+        icon.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor"><rect x="3" y="2" width="4" height="12" rx="1"/><rect x="9" y="2" width="4" height="12" rx="1"/></svg>`;
+        wave.classList.remove('paused');
+        clearTimeout(calendarTimer);
+        clearTimeout(handledTimer);
+        calendarTimer = setTimeout(bookSlot, 42000);
+        handledTimer  = setTimeout(() => nHandled.classList.add('visible'), 54000);
+      } else {
+        btn.classList.remove('playing');
+        label.textContent = 'Play again';
+        icon.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 3.5l9 4.5-9 4.5V3.5z"/></svg>`;
+        wave.classList.add('paused');
+        clearTimeout(calendarTimer);
+        clearTimeout(handledTimer);
+      }
+    }
+
+    function toggleAudio() {
+      if (audio.paused) {
+        resetNotifs();
+        resetCalendar();
+        audio.currentTime = 0;
+        audio.play().then(() => {
+          setPlaying(true);
+        }).catch(err => {
+          console.error('Audio playback failed:', err);
+          label.textContent = 'Try it';
+          btn.classList.remove('playing');
+          wave.classList.add('paused');
+          alert('Audio blocked by browser. Please open this page via the local server at http://localhost:8080');
+        });
+      } else {
+        audio.pause();
+        audio.currentTime = 0;
+        resetNotifs();
+        resetCalendar();
+        btn.classList.remove('playing');
+        label.textContent = 'Try it';
+        icon.innerHTML = `<svg viewBox="0 0 16 16" fill="currentColor"><path d="M4 3.5l9 4.5-9 4.5V3.5z"/></svg>`;
+        wave.classList.add('paused');
+        clearTimeout(calendarTimer);
+        clearTimeout(handledTimer);
+      }
+    }
+
+    audio.addEventListener('ended', () => setPlaying(false));
+
+    // L→R traveling wave: stagger animation phase across bars
+    (function() {
+      const bars = document.querySelectorAll('.vw-bar');
+      const dur = 2.4;
+      const spread = dur / 2 - 0.1; // spread < half-period keeps direction correct
+      const n = bars.length;
+      bars.forEach((bar, i) => {
+        bar.style.animationDelay = `${(i / (n - 1)) * spread - spread}s`;
+      });
+    })();
+  </script>
+</body>
+</html>
