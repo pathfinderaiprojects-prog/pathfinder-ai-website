@@ -583,7 +583,7 @@ p { margin: 0; }
 .badge-sub-row span {
   font-size: .78rem;
   font-weight: 600;
-  color: var(--ink-soft);
+  color: #4C5C77; /* fijo: la tarjeta es blanca en ambos temas */
   white-space: nowrap;
 }
 .badge-wave { display: flex; align-items: center; gap: 2px; height: 14px; flex: none; }
