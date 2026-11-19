@@ -1,0 +1,89 @@
+# =========================================================
+# PATHFINDER AI AGENCY — configuración del servidor
+# Compatible con Apache y LiteSpeed (Hostinger).
+# Cada bloque va protegido con IfModule: si el módulo no
+# existe, se ignora sin provocar errores 500.
+# =========================================================
+
+# ---------- Página de inicio ----------
+DirectoryIndex index.html index.php
+
+# ---------- Compresión ----------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/ttf font/woff font/woff2
+</IfModule>
+
+# ---------- Tipos MIME ----------
+<IfModule mod_mime.c>
+  AddType image/svg+xml            .svg
+  AddType font/ttf                 .ttf
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# ---------- Caché ----------
+# Regla clave: el HTML NUNCA se cachea, así el navegador siempre
+# recibe la última versión de index.html, que a su vez apunta al
+# CSS y al JS con su número de versión (?v=). Las imágenes y la
+# tipografía sí se cachean mucho tiempo porque no cambian de nombre
+# sin cambiar de contenido.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault                        "access plus 1 month"
+  ExpiresByType text/html               "access plus 0 seconds"
+  ExpiresByType text/css                "access plus 1 year"
+  ExpiresByType application/javascript  "access plus 1 year"
+  ExpiresByType image/svg+xml           "access plus 1 year"
+  ExpiresByType image/png               "access plus 1 year"
+  ExpiresByType image/jpeg              "access plus 1 year"
+  ExpiresByType font/ttf                "access plus 1 year"
+  ExpiresByType text/xml                "access plus 1 hour"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # El HTML se revalida siempre contra el servidor.
+  <FilesMatch "\.(html|htm)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # CSS y JS se piden con ?v=fecha, así que pueden cachearse fuerte.
+  <FilesMatch "\.(css|js)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+
+  # Imágenes y tipografías: caché larga.
+  <FilesMatch "\.(svg|png|jpg|jpeg|webp|ico|ttf|woff|woff2)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+
+  # robots.txt y sitemap.xml: caché corta.
+  <FilesMatch "^(robots\.txt|sitemap\.xml)$">
+    Header set Cache-Control "public, max-age=3600"
+  </FilesMatch>
+
+  # Cabeceras de seguridad básicas.
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>
+
+# ---------- Redirección de www a dominio sin www ----------
+# HTTPS NO se fuerza aqui a proposito: Hostinger lo gestiona desde
+# hPanel > Websites > Administrar > Seguridad > "Forzar HTTPS".
+# Duplicarlo en .htaccess puede provocar un bucle de redireccion,
+# porque el SSL termina en el proxy y %{HTTPS} no siempre llega "on".
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^(.*)$ https://%1/$1 [R=301,L]
+</IfModule>
+
+# ---------- Proteger archivos internos ----------
+<IfModule mod_authz_core.c>
+  <FilesMatch "^(LEEME_HOSTINGER\.txt|README_SUBIDA_HOSTINGER\.txt)$">
+    Require all denied
+  </FilesMatch>
+</IfModule>
