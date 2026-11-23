@@ -1449,3 +1449,22 @@ p { margin: 0; }
   body { color: #000; background: #fff; }
   .section.dark, .hero, .strip, .site-footer { background: #fff !important; color: #000 !important; }
 }
+
+/* ---------- Enlaces LinkedIn (equipo y footer) ---------- */
+.li-ico { width: 18px; height: 18px; fill: currentColor; flex: none; }
+.founder-link {
+  display: inline-flex; align-items: center; gap: 8px; margin-top: 6px;
+  font-size: .9rem; font-weight: 700; color: var(--mystic-cosmos); text-decoration: none;
+}
+.founder-link:hover { color: #0A66C2; }
+.company-link {
+  margin-top: 28px; display: inline-flex; align-items: center; gap: 10px;
+  padding: 12px 20px; border-radius: 999px; border: 1px solid rgba(10, 102, 194, .35);
+  color: #0A66C2; font-weight: 700; text-decoration: none; background: #fff;
+}
+.company-link:hover { background: #0A66C2; color: #fff; }
+.footer-li { display: inline-flex; align-items: center; gap: 8px; }
+.founder-link:focus-visible, .company-link:focus-visible, .footer-li:focus-visible { outline: 2px solid var(--heavy-blue); outline-offset: 3px; }
+
+/* Evita scroll horizontal en móvil por los brillos decorativos del hero */
+html, body { overflow-x: clip; }

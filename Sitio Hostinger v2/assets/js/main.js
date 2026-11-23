@@ -113,12 +113,9 @@
       panelFoot: 'Con intervención humana donde importa',
 
       teamEyebrow: 'Quiénes somos',
-      teamTitle: '[PLACEHOLDER] Tres personas, un mismo objetivo.',
-      teamLead: '[PLACEHOLDER — pendiente de bios reales] Así se reparte el trabajo entre quienes construyen Pathfinder AI Agency.',
-      team1Name: '[Nombre 1]', team1Role: '[Rol / título]', team1Super: '[Superpoder]', team1Bio: '[Bio corta pendiente — 1–2 líneas sobre su enfoque y experiencia.]',
-      team2Name: '[Nombre 2]', team2Role: '[Rol / título]', team2Super: '[Superpoder]', team2Bio: '[Bio corta pendiente — 1–2 líneas sobre su enfoque y experiencia.]',
-      team3Name: '[Nombre 3]', team3Role: '[Rol / título]', team3Super: '[Superpoder]', team3Bio: '[Bio corta pendiente — 1–2 líneas sobre su enfoque y experiencia.]',
-      teamNote: 'Sección en borrador: fotos y biografías finales pendientes de confirmar con el equipo.',
+      teamTitle: 'Las personas detrás de Pathfinder AI.',
+      teamLead: 'Un equipo pequeño y cercano: hablas directamente con quienes diseñan y construyen tu solución.',
+      teamLinkedIn: 'Ver perfil en LinkedIn', teamCompany: 'Sigue a Pathfinder AI Agency en LinkedIn',
 
       valuesEyebrow: 'Nuestras directrices',
       valuesTitle: 'Los principios con los que medimos cada proyecto.',
@@ -243,12 +240,9 @@
       panelFoot: 'With human involvement where it matters',
 
       teamEyebrow: 'Who we are',
-      teamTitle: '[PLACEHOLDER] Three people, one goal.',
-      teamLead: '[PLACEHOLDER — real bios pending] How the work is split across the people building Pathfinder AI Agency.',
-      team1Name: '[Name 1]', team1Role: '[Role / title]', team1Super: '[Superpower]', team1Bio: '[Short bio pending — 1–2 lines on focus and experience.]',
-      team2Name: '[Name 2]', team2Role: '[Role / title]', team2Super: '[Superpower]', team2Bio: '[Short bio pending — 1–2 lines on focus and experience.]',
-      team3Name: '[Name 3]', team3Role: '[Role / title]', team3Super: '[Superpower]', team3Bio: '[Short bio pending — 1–2 lines on focus and experience.]',
-      teamNote: 'Draft section: final photos and bios pending confirmation from the team.',
+      teamTitle: 'The people behind Pathfinder AI.',
+      teamLead: 'A small, hands-on team: you talk directly with the people who design and build your solution.',
+      teamLinkedIn: 'View LinkedIn profile', teamCompany: 'Follow Pathfinder AI Agency on LinkedIn',
 
       valuesEyebrow: 'Our guidelines',
       valuesTitle: 'The principles we measure every project against.',

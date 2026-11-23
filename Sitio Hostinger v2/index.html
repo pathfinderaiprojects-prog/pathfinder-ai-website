@@ -22,16 +22,11 @@
   <link rel="apple-touch-icon" href="assets/img/pathfinder-icon.png">
   <link rel="preload" href="assets/fonts/Manrope-VariableFont_wght.ttf" as="font" type="font/ttf" crossorigin>
   <script>
-    /* Se aplica el tema antes de pintar para evitar un parpadeo blanco. */
-    (function () {
-      try {
-        var t = localStorage.getItem('pathfinder-theme');
-        if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {}
-    })();
+    /* Tema único: se limpia cualquier preferencia guardada por el antiguo botón claro/oscuro. */
+    try { localStorage.removeItem('pathfinder-theme'); } catch (e) {}
   </script>
-  <link rel="stylesheet" href="assets/css/styles.css?v=2026-11-19b">
-  <script defer src="assets/js/main.js?v=2026-11-19b"></script>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2026-11-23">
+  <script defer src="assets/js/main.js?v=2026-11-23"></script>
 
   <script type="application/ld+json">
   {
@@ -44,6 +39,7 @@
     "description": "Automatizaciones de IA, asistentes de voz e integraciones para empresas de servicios.",
     "areaServed": "Global",
     "availableLanguage": ["es", "en"],
+    "sameAs": ["https://www.linkedin.com/company/pathfinder-ai-agency-inc/"],
     "serviceType": ["Automatización de procesos", "Asistentes de voz con IA", "Integraciones y eficiencia administrativa"]
   }
   </script>
@@ -63,15 +59,11 @@
         <a href="#models" data-i18n="navModels">Cómo trabajamos</a>
         <a href="#work" data-i18n="navWork">Resultados en acción</a>
         <a href="#process" data-i18n="navProcess">Cómo lo hacemos</a>
-        <a href="#approach" data-i18n="navAbout">Quiénes somos</a>
+        <a href="#about" data-i18n="navAbout">Quiénes somos</a>
         <a class="mobile-cta" href="https://cal.com/pathfinderai/free-consultation?user=pathfinderai" target="_blank" rel="noopener" data-i18n="navCall">Agenda una llamada</a>
       </nav>
 
       <div class="nav-actions">
-        <button class="theme-switch" type="button" data-theme-switch aria-label="Cambiar a tema oscuro">
-          <svg class="ico-moon" aria-hidden="true" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z"/></svg>
-          <svg class="ico-sun" aria-hidden="true" viewBox="0 0 24 24"><path d="M12 17a5 5 0 100-10 5 5 0 000 10zM12 1.8v2.4M12 19.8v2.4M4.0 4.0l1.7 1.7M18.3 18.3l1.7 1.7M1.8 12h2.4M19.8 12h2.4M4.0 20l1.7-1.7M18.3 5.7L20 4.0"/></svg>
-        </button>
         <button class="lang-switch" type="button" data-lang-switch aria-label="Change language / Cambiar idioma">
           <span class="lang-on">ES</span><span class="lang-off">EN</span>
         </button>
@@ -115,10 +107,6 @@
         </div>
 
         <div class="hero-visual reveal" data-delay="3">
-          <!-- PLACEHOLDER: foto candidata de banco (Unsplash, uso comercial libre) para
-               probar el concepto en el borrador. Reemplazar por foto real/propia antes
-               de publicar — candidatos 2 y 3 quedan en la misma carpeta como alternas
-               (3 = salon, ver index-hero-salon.html para esa version completa). -->
           <figure class="hero-photo">
             <div class="hero-photo-frame">
               <img src="assets/img/hero/hero-photo-candidato-1.jpg" alt="" data-i18n-alt="heroPhotoAlt" width="1400" height="2098">
@@ -352,7 +340,6 @@
 
     <!-- ==================== APPROACH / ARCHITECTURE ==================== -->
     <section class="section dark" id="approach">
-      <span id="nosotros"></span>
       <div class="container split">
         <div class="split-copy">
           <p class="eyebrow reveal" data-i18n="caseEyebrow">Un enfoque responsable</p>
@@ -476,49 +463,48 @@
       </div>
     </section>
 
-    <!-- ==================== TEAM / CO-FOUNDERS ==================== -->
-    <!-- Equipo: oculto hasta tener nombres/bios reales. Quitar "hidden" para mostrar. -->
-    <section class="section muted" id="about" hidden>
+    <!-- ==================== EQUIPO ==================== -->
+    <section class="section muted" id="about">
       <div class="container">
         <div class="section-head">
           <p class="eyebrow reveal" data-i18n="teamEyebrow">Quiénes somos</p>
-          <h2 class="reveal" data-delay="1" data-i18n="teamTitle">[PLACEHOLDER] Tres personas, un mismo objetivo.</h2>
-          <p class="section-lead reveal" data-delay="2" data-i18n="teamLead">[PLACEHOLDER — pendiente de bios reales] Así se reparte el trabajo entre quienes construyen Pathfinder AI Agency.</p>
+          <h2 class="reveal" data-delay="1" data-i18n="teamTitle">Las personas detrás de Pathfinder AI.</h2>
+          <p class="section-lead reveal" data-delay="2" data-i18n="teamLead">Un equipo pequeño y cercano: hablas directamente con quienes diseñan y construyen tu solución.</p>
         </div>
 
         <div class="cards-3">
           <article class="card founder reveal">
-            <div class="founder-avatar" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-            </div>
-            <h3 data-i18n="team1Name">[Nombre 1]</h3>
-            <p class="founder-role" data-i18n="team1Role">[Rol / título]</p>
-            <span class="founder-super" data-i18n="team1Super">[Superpoder]</span>
-            <p data-i18n="team1Bio">[Bio corta pendiente — 1–2 líneas sobre su enfoque y experiencia.]</p>
+            <div class="founder-avatar" aria-hidden="true">DI</div>
+            <h3>Daniel Isaza Barrantes</h3>
+            <a class="founder-link" href="https://www.linkedin.com/in/danielisazabarrantes/" target="_blank" rel="noopener">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="li-ico"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9h4v12H3zM9.5 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.03-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96V21h-4z"/></svg>
+              <span data-i18n="teamLinkedIn">Ver perfil en LinkedIn</span>
+            </a>
           </article>
 
           <article class="card founder reveal" data-delay="1">
-            <div class="founder-avatar" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-            </div>
-            <h3 data-i18n="team2Name">[Nombre 2]</h3>
-            <p class="founder-role" data-i18n="team2Role">[Rol / título]</p>
-            <span class="founder-super" data-i18n="team2Super">[Superpoder]</span>
-            <p data-i18n="team2Bio">[Bio corta pendiente — 1–2 líneas sobre su enfoque y experiencia.]</p>
+            <div class="founder-avatar" aria-hidden="true">DI</div>
+            <h3>Diana Isaza Shelton</h3>
+            <a class="founder-link" href="https://www.linkedin.com/in/diana-isaza-shelton/" target="_blank" rel="noopener">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="li-ico"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9h4v12H3zM9.5 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.03-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96V21h-4z"/></svg>
+              <span data-i18n="teamLinkedIn">Ver perfil en LinkedIn</span>
+            </a>
           </article>
 
           <article class="card founder reveal" data-delay="2">
-            <div class="founder-avatar" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 100-10 5 5 0 000 10zM4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
-            </div>
-            <h3 data-i18n="team3Name">[Nombre 3]</h3>
-            <p class="founder-role" data-i18n="team3Role">[Rol / título]</p>
-            <span class="founder-super" data-i18n="team3Super">[Superpoder]</span>
-            <p data-i18n="team3Bio">[Bio corta pendiente — 1–2 líneas sobre su enfoque y experiencia.]</p>
+            <div class="founder-avatar" aria-hidden="true">AI</div>
+            <h3>Andres Isaza Barrantes</h3>
+            <a class="founder-link" href="https://www.linkedin.com/in/andres-isaza-barrantes-0a0b36350/" target="_blank" rel="noopener">
+              <svg aria-hidden="true" viewBox="0 0 24 24" class="li-ico"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9h4v12H3zM9.5 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.03-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96V21h-4z"/></svg>
+              <span data-i18n="teamLinkedIn">Ver perfil en LinkedIn</span>
+            </a>
           </article>
         </div>
 
-        <p class="founder-note reveal" data-i18n="teamNote">Sección en borrador: fotos y biografías finales pendientes de confirmar con el equipo.</p>
+        <a class="company-link reveal" href="https://www.linkedin.com/company/pathfinder-ai-agency-inc/" target="_blank" rel="noopener">
+          <svg aria-hidden="true" viewBox="0 0 24 24" class="li-ico"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9h4v12H3zM9.5 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.03-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96V21h-4z"/></svg>
+          <span data-i18n="teamCompany">Sigue a Pathfinder AI Agency en LinkedIn</span>
+        </a>
       </div>
     </section>
 
@@ -572,13 +558,14 @@
         <a href="#models" data-i18n="navModels">Cómo trabajamos</a>
         <a href="#work" data-i18n="navWork">Resultados en acción</a>
         <a href="#process" data-i18n="navProcess">Cómo lo hacemos</a>
+        <a href="#about" data-i18n="navAbout">Quiénes somos</a>
       </nav>
 
       <div class="footer-col">
         <h4 data-i18n="footerContact">Contacto</h4>
         <a href="mailto:info@pathfinderaiagency.com">info@pathfinderaiagency.com</a>
         <a href="https://cal.com/pathfinderai/free-consultation?user=pathfinderai" target="_blank" rel="noopener" data-i18n="footerBook">Agenda una llamada</a>
-        <a href="#top">pathfinderaiagency.com</a>
+        <a class="footer-li" href="https://www.linkedin.com/company/pathfinder-ai-agency-inc/" target="_blank" rel="noopener"><svg aria-hidden="true" viewBox="0 0 24 24" class="li-ico"><path d="M4.98 3.5a2.5 2.5 0 11-.01 5 2.5 2.5 0 01.01-5zM3 9h4v12H3zM9.5 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1V21h-4v-5.6c0-1.34-.03-3.06-1.86-3.06-1.87 0-2.15 1.46-2.15 2.96V21h-4z"/></svg><span>LinkedIn</span></a>
       </div>
     </div>
 
